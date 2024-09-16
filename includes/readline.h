@@ -27,7 +27,7 @@ char	*strdup_rl(char *str);
 // readline
 void	set_termios(void);
 void	reset_termios(void);
-char	*readLine(void);
+char	*ft_readline(void);
 
 // history
 

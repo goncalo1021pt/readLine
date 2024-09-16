@@ -8,7 +8,7 @@ void	reset_termios(void)
 {
 }
 
-char	*readLine(void)
+char	*ft_readline(void)
 {
 	char				*line;
 	char				buffer[READLINE_BUFFER_SIZE + 1];
