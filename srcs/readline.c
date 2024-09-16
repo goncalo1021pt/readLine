@@ -1,12 +1,5 @@
 #include "readline.h"
 
-void	set_termios(void)
-{
-}
-
-void	reset_termios(void)
-{
-}
 
 char	*ft_readline(void)
 {
@@ -19,6 +12,7 @@ char	*ft_readline(void)
 	while (true)
 	{
 		read_bytes = read(0, buffer, READLINE_BUFFER_SIZE);
+		// key_handler(buffer, read_bytes);
 		if (read_bytes == -1)
 			return (reset_termios(), try_free(line), NULL);
 		if (read_bytes == 0)

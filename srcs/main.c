@@ -8,6 +8,8 @@ int main() {
 	{
 		line = ft_readline();
 		printf("line: %s\n", line);
+		if (line == NULL)
+			continue ;
 		history_rl(NULL, 2);
 		if (!strcmp(line, "quit"))
 			break;

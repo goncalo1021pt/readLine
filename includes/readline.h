@@ -7,6 +7,7 @@
 # include <stdarg.h>
 # include <stdbool.h>
 # include <string.h>
+# include <termios.h>
 
 # define READLINE_BUFFER_SIZE 4
 
@@ -28,6 +29,9 @@ char	*strdup_rl(char *str);
 void	set_termios(void);
 void	reset_termios(void);
 char	*ft_readline(void);
+
+// keys
+void	key_handler(char *buffer, int read_bytes);
 
 // history
 
