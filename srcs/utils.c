@@ -34,7 +34,7 @@ char	*strdup_rl(char *str)
 	return (out);
 }
 
-char	*strjoin_rl(char *str1, char *str2)
+char	*strjoin_rl(char *str1, char *str2, t_pos *p)
 {
 	char	*out;
 	int		ctd;
@@ -51,7 +51,10 @@ char	*strjoin_rl(char *str1, char *str2)
 	}
 	ctd2 = -1;
 	while (str2 && str2[++ctd2])
+	{
 		out[ctd++] = str2[ctd2];
+		p->current++;
+	}
 	out[ctd] = 0;
 	return (try_free(str1), out);
 }

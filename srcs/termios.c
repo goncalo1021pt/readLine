@@ -19,7 +19,7 @@ void	set_termios(void)
 
 	new = old_termios();
 
-	new.c_lflag &= ~(ICANON);
+	new.c_lflag &= ~(ICANON | ECHO);
 	new.c_cc[VMIN] = 1;
 	new.c_cc[VTIME] = 0;
 

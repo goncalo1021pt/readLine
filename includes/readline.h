@@ -8,6 +8,7 @@
 # include <stdbool.h>
 # include <string.h>
 # include <termios.h>
+# include "keys.h"
 
 # define READLINE_BUFFER_SIZE 4
 
@@ -19,19 +20,29 @@ typedef struct s_readline
 
 }	t_readline;
 
+typedef struct s_pos
+{
+	size_t	initial;
+	size_t	current;
+}	t_pos;
+
 // utils
 int		str_len_rl(char *str);
 void	try_free(void *ptr);
-char	*strjoin_rl(char *str1, char *str2);
+char	*strjoin_rl(char *str1, char *str2, t_pos *p);
 char	*strdup_rl(char *str);
+
+// string
+void	insert_char(char *line, char c, t_pos *p);
+void	remove_char(char *line, size_t pos);
 
 // readline
 void	set_termios(void);
 void	reset_termios(void);
-char	*ft_readline(void);
+char	*ft_readline(char *promt);
 
 // keys
-void	key_handler(char *buffer, int read_bytes);
+void	key_handler(char *buffer, int read_bytes, char **line, t_pos *p);
 
 // history
 
