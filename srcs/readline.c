@@ -27,7 +27,7 @@ char	*readLine(void)
 		line = strjoin_rl(line, buffer);
 		if (!line)
 			return (reset_termios(), NULL);
-		if (buffer[read_bytes - 1] == '\n')
+		if (buffer[read_bytes - 1] == '\n' || buffer[read_bytes - 1] == '\4')
 		{
 			line[str_len_rl(line) - 1] = 0;
 			break ;
