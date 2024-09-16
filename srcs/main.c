@@ -3,15 +3,17 @@
 
 int main() {
 	char	*line;
-	char	*line2;
 
-	line = readLine();
-	line2 = readLine();
-	printf("line: %s\n", line);
-	printf("line2: %s\n", line2);
-	history(NULL, 2);
-	free(line2);
+	while(1)
+	{
+		line = readLine();
+		printf("line: %s\n", line);
+		history_rl(NULL, 2);
+		if (!strcmp(line, "quit"))
+			break;
+		free(line);
+	}
 	free(line);
-	free_history(NULL);
+	history_rl(NULL, 1);
 	return	0;
 }

@@ -34,7 +34,7 @@ char	*readLine(void)
 		}
 	}
 	reset_termios();
-	if (!history(line, 0))
+	if (!history_rl(line, 0))
 		return (try_free(line), NULL);
 	return (line);
 }

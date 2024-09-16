@@ -6,6 +6,7 @@
 # include <unistd.h>
 # include <stdarg.h>
 # include <stdbool.h>
+# include <string.h>
 
 # define READLINE_BUFFER_SIZE 4
 
@@ -40,9 +41,9 @@ char	*readLine(void);
  *             - 2: Print the history.
  * @return true if the operation was successful, false otherwise.
  */
-bool	history(char *line, int func);
-bool	add_history(char *line, t_readline **history);
-void	free_history(t_readline **history);
-void	print_history(t_readline *history);
+bool	history_rl(char *line, int func);
+// bool	add_history(char *line, t_readline **history);
+// void	free_history(t_readline **history);
+// void	print_history(t_readline *history);
 
 #endif

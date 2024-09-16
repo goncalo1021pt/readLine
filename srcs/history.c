@@ -1,28 +1,5 @@
 #include "readline.h"
 
-bool	history(char *line, int func)
-{
-	static t_readline	*history = NULL;
-
-	if (func == 0)
-	{
-		if (!add_history(line, &history))
-			return (false);
-		return (true);
-	}
-	else if (func == 1 && history)
-	{
-		free_history(&history);
-		return (true);
-	}
-	else if (func == 2 && history)
-	{
-		print_history(history);
-		return (true);
-	}
-	return (false);
-}
-
 bool	add_history(char *line, t_readline **history)
 {
 	t_readline	*new;
@@ -71,4 +48,27 @@ void	print_history(t_readline *history)
 		printf("%s\n", history->line);
 		history = history->next;
 	}
+}
+
+bool	history_rl(char *line, int func)
+{
+	static t_readline	*history = NULL;
+
+	if (func == 0)
+	{
+		if (!add_history(line, &history))
+			return (false);
+		return (true);
+	}
+	else if (func == 1 && history)
+	{
+		free_history(&history);
+		return (true);
+	}
+	else if (func == 2 && history)
+	{
+		print_history(history);
+		return (true);
+	}
+	return (false);
 }
