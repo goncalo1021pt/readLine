@@ -49,7 +49,7 @@ void key_handler(char *buffer, int read_bytes, char **line, t_pos *p)
 			printf("down\n");
 	}
 	else if (buffer[0] >= 32 && buffer[0] <= 126)
-		write(1, buffer, read_bytes);
+		write(1, &line[p->current - 1], str_len_rl(*line) - (p->current - p->initial) + 1);
 	else if (buffer[0] == BACKSPACE)
 		handle_backspace(*line, p);
 	else if (buffer[0] == ENTER)
