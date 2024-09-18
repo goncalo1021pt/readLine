@@ -10,7 +10,7 @@
 # include <termios.h>
 # include "keys.h"
 
-# define READLINE_BUFFER_SIZE 4
+# define READLINE_BUFFER_SIZE 1024
 
 typedef struct s_readline
 {
@@ -20,21 +20,25 @@ typedef struct s_readline
 
 }	t_readline;
 
-typedef struct s_pos
+typedef struct s_line
 {
 	size_t	initial;
 	size_t	current;
-}	t_pos;
+	size_t	buffer_size;
+	char	*line;
+}	t_line;
 
 // utils
-int		str_len_rl(char *str);
+size_t	str_len_rl(char *str);
 void	try_free(void *ptr);
-char	*strjoin_rl(char *str1, char *str2, t_pos *p);
+char	*strjoin_rl(char *str1, char *str2, t_line *p);
 char	*strdup_rl(char *str);
+void	*ft_realloc(void *ptr, size_t size);
+void	ft_memcpy(void *dst, void *src, size_t size);
+void	*ft_calloc(size_t count, size_t size);
 
 // string
-void	insert_char(char *line, char c, t_pos *p);
-void	remove_char(char *line, size_t pos);
+bool	line_handler(t_line *l, char *buffer);
 
 // readline
 void	set_termios(void);
@@ -42,7 +46,7 @@ void	reset_termios(void);
 char	*ft_readline(char *promt);
 
 // keys
-void	key_handler(char *buffer, int read_bytes, char **line, t_pos *p);
+void 	key_handler(char *buffer, int read_bytes, char *prompt, t_line *l);
 
 // history
 

@@ -1,6 +1,6 @@
 #include "readline.h"
 
-struct termios old_termios(void)
+struct termios	old_termios(void)
 {
 	static struct termios	old;
 	static bool				init = false;

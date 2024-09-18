@@ -1,8 +1,8 @@
 #include "readline.h"
 
-int	str_len_rl(char *str)
+size_t	str_len_rl(char *str)
 {
-	int	ctd;
+	size_t	ctd;
 
 	ctd = 0;
 	while (str && str[ctd])
@@ -34,7 +34,7 @@ char	*strdup_rl(char *str)
 	return (out);
 }
 
-char	*strjoin_rl(char *str1, char *str2, t_pos *p)
+char	*strjoin_rl(char *str1, char *str2, t_line *p)
 {
 	char	*out;
 	int		ctd;
@@ -57,4 +57,45 @@ char	*strjoin_rl(char *str1, char *str2, t_pos *p)
 	}
 	out[ctd] = 0;
 	return (try_free(str1), out);
+}
+
+void	*ft_realloc(void *ptr, size_t size)
+{
+	void	*out;
+
+	out = ft_calloc(size, 1);
+	if (!out)
+		return (try_free(ptr), NULL);
+	ft_memcpy(out, ptr, size);
+	try_free(ptr);
+	return (out);
+}
+
+void	ft_memcpy(void *dst, void *src, size_t size)
+{
+	size_t	ctd;
+
+	ctd = 0;
+	while (ctd < size)
+	{
+		((char *)dst)[ctd] = ((char *)src)[ctd];
+		ctd++;
+	}
+}
+
+void	*ft_calloc(size_t count, size_t size)
+{
+	void	*out;
+	size_t	ctd;
+
+	out = malloc(count * size);
+	if (!out)
+		return (NULL);
+	ctd = 0;
+	while (ctd < count * size)
+	{
+		((char *)out)[ctd] = 0;
+		ctd++;
+	}
+	return (out);
 }

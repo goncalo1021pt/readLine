@@ -1,39 +1,60 @@
 #include "readline.h"
 
+void	exit_rl(t_line *l)
+{
+	if (l->line)
+		free(l->line);
+	l->line = NULL;
+}
+
+void	save_pointer(t_line *l)
+{
+	static t_line	*line;
+
+	if (l)
+		line = l;
+	else
+		exit_rl(line);
+}
+
+void	init_readline(t_line *l, char *prompt)
+{
+	l->line = NULL;
+	l->buffer_size = 0;
+	set_termios();
+	l->initial = str_len_rl(prompt);
+	l->current = l->initial;
+	write(1, prompt, l->initial);
+}
 
 char	*ft_readline(char *prompt)
 {
-	char				*line;
-	t_pos				p;
-	char				buffer[READLINE_BUFFER_SIZE + 1];
-	int					read_bytes;
+	t_line	l;
+	char	buffer[10];
+	int		read_bytes;
 
-	line = NULL;
-	set_termios();
-	p.initial = str_len_rl(prompt);
-	p.current = p.initial;
-	write(1, prompt, p.initial);
+	init_readline(&l, prompt);
 	while (true)
 	{
-		read_bytes = read(0, buffer, READLINE_BUFFER_SIZE);
+		read_bytes = read(0, buffer, 10);
 		if (read_bytes == -1)
-			return (reset_termios(), try_free(line), NULL);
+			return (reset_termios(), try_free(l.line), NULL);
 		if (read_bytes == 0)
 			break ;
 		buffer[read_bytes] = 0;
-		if (read_bytes == 1 && buffer[0] >= 32 && buffer[0] <= 126)
-			line = strjoin_rl(line, buffer, &p);
-		key_handler(buffer, read_bytes, &line, &p); 
-		if (!line)
+		if (!line_handler(&l, buffer))
+			return (reset_termios(), try_free(l.line), NULL);
+		key_handler(buffer, read_bytes, prompt, &l); 
+		if (!l.line)
 			return (reset_termios(), NULL);
 		if (buffer[read_bytes - 1] == '\n' || buffer[read_bytes - 1] == '\4')
 		{
-			// line[str_len_rl(line) - 1] = 0;
+			// l.line[str_len_rl(l.line) - 1] = 0;
 			break ;
 		}
 	}
 	reset_termios();
-	if (!history_rl(line, 0))
-		return (try_free(line), NULL);
-	return (line);
+	if (!history_rl(l.line, 0))
+		return (try_free(l.line), NULL);
+	return (l.line);
 }
