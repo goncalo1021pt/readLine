@@ -9,7 +9,7 @@ int main() {
 		line = ft_readline("minishell$ ");
 		printf("%s\n", line);
 		if (line == NULL)
-			continue ;
+			break ;
 		if (!strcmp(line, "quit"))
 			break;
 		free(line);

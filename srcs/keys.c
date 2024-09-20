@@ -21,9 +21,11 @@ void handle_left(t_line *l)
 	write(1, "\b", 1);
 }
 
-void handle_right()
+void handle_right(t_line *l)
 {
 	write(1, "\a", 1);
+	if (str_len_rl(l->line) + l->initial > l->current)
+		l->current++;
 }
 
 void handle_up()
@@ -43,7 +45,7 @@ void key_handler(char *buffer, int read_bytes, char *prompt, t_line *l)
 		if (buffer[0] == 27 && buffer[1] == 91 && buffer[2] == 68)
 			handle_left(l);
 		if (buffer[0] == 27 && buffer[1] == 91 && buffer[2] == 67)
-			handle_right();
+			handle_right(l);
 		if (buffer[0] == 27 && buffer[1] == 91 && buffer[2] == 65)
 			printf("up\n");
 		if (buffer[0] == 27 && buffer[1] == 91 && buffer[2] == 66)
@@ -54,6 +56,8 @@ void key_handler(char *buffer, int read_bytes, char *prompt, t_line *l)
 		write(1, "\r", 1);
 		write(1, prompt, str_len_rl(prompt));
 		write(1, l->line, str_len_rl(l->line));
+		write(1, " ", 1);
+		write(1, "\b", 1);
 	}
 	else if (buffer[0] == BACKSPACE)
 		handle_backspace(l);
