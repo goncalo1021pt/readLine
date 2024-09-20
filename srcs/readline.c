@@ -27,6 +27,11 @@ void	init_readline(t_line *l, char *prompt)
 	write(1, prompt, l->initial);
 }
 
+char *return_line(t_line *l)
+{
+	
+}
+
 char	*ft_readline(char *prompt)
 {
 	t_line	l;
@@ -37,18 +42,14 @@ char	*ft_readline(char *prompt)
 	while (true)
 	{
 		read_bytes = read(0, buffer, 10);
-		if (buffer[read_bytes - 1] == '\4' && (l.line == NULL || *l.line == 0))
+		if (read_bytes == 0 || (buffer[read_bytes - 1] == '\4' && (l.line == NULL || *l.line == 0)))
 			break;
 		else if (buffer[read_bytes - 1] == '\4')
 			continue;
-		if (read_bytes == -1)
-			return (reset_termios(), try_free(l.line), NULL);
-		if (read_bytes == 0)
-			break ;
 		buffer[read_bytes] = 0;
-		if (!line_handler(&l, buffer))
+		if (read_bytes == -1 || !line_handler(&l, buffer))
 			return (reset_termios(), try_free(l.line), NULL);
-		key_handler(buffer, read_bytes, prompt, &l); 
+		key_handler(buffer, read_bytes, prompt, &l);
 		if (!l.line)
 			return (reset_termios(), NULL);
 		if (buffer[read_bytes - 1] == '\n')
@@ -57,5 +58,5 @@ char	*ft_readline(char *prompt)
 	reset_termios();
 	if (!history_rl(l.line, 0))
 		return (try_free(l.line), NULL);
-	return (l.line);
+	return (return_line(l.line));
 }
