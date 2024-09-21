@@ -29,7 +29,22 @@ void	init_readline(t_line *l, char *prompt)
 
 char *return_line(t_line *l)
 {
-	
+	int line_len;
+
+	if (l->line == NULL || *l->line == 0)
+	{
+		exit_rl(l);
+		return (NULL);
+	}
+	line_len = str_len_rl(l->line);
+	l->line = ft_realloc(l->line, line_len + 1);
+	l->line[line_len] = 0;
+	return (l->line);
+}
+
+void	test_stuff(t_line *l)
+{
+	(void)l;
 }
 
 char	*ft_readline(char *prompt)
@@ -39,6 +54,7 @@ char	*ft_readline(char *prompt)
 	int		read_bytes;
 
 	init_readline(&l, prompt);
+	test_stuff(&l);
 	while (true)
 	{
 		read_bytes = read(0, buffer, 10);
@@ -58,5 +74,5 @@ char	*ft_readline(char *prompt)
 	reset_termios();
 	if (!history_rl(l.line, 0))
 		return (try_free(l.line), NULL);
-	return (return_line(l.line));
+	return (return_line(&l));
 }
