@@ -8,6 +8,7 @@
 # include <stdbool.h>
 # include <string.h>
 # include <termios.h>
+# include <sys/ioctl.h>
 # include "keys.h"
 
 # define READLINE_BUFFER_SIZE 1024
@@ -28,6 +29,13 @@ typedef struct s_line
 	char	*line;
 }	t_line;
 
+typedef struct s_winsize {
+    unsigned short ws_row;    /* rows, in characters */
+    unsigned short ws_col;    /* columns, in characters */
+    unsigned short ws_xpixel; /* horizontal size, pixels */
+    unsigned short ws_ypixel; /* vertical size, pixels */
+} t_winsize;
+
 // utils
 size_t	str_len_rl(char *str);
 void	try_free(void *ptr);
@@ -44,6 +52,7 @@ bool	line_handler(t_line *l, char *buffer);
 void	set_termios(void);
 void	reset_termios(void);
 char	*ft_readline(char *promt);
+t_winsize	test_stuff(t_line *l);
 
 // keys
 void 	key_handler(char *buffer, int read_bytes, char *prompt, t_line *l);

@@ -42,9 +42,17 @@ char *return_line(t_line *l)
 	return (l->line);
 }
 
-void	test_stuff(t_line *l)
+t_winsize	test_stuff(t_line *l)
 {
 	(void)l;
+	// char *tty = ttyname(0);
+	static t_winsize w;
+	ioctl(STDIN_FILENO, TIOCGWINSZ, &w);
+	printf("Rows: %d\n", w.ws_row);
+	printf("Columns: %d\n", w.ws_col);
+	printf("ws_xpixel: %d\n", w.ws_xpixel);
+	printf("ws_ypixel: %d\n", w.ws_ypixel);
+	return w;
 }
 
 char	*ft_readline(char *prompt)
@@ -54,7 +62,7 @@ char	*ft_readline(char *prompt)
 	int		read_bytes;
 
 	init_readline(&l, prompt);
-	test_stuff(&l);
+	// test_stuff(&l);
 	while (true)
 	{
 		read_bytes = read(0, buffer, 10);

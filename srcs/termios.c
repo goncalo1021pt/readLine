@@ -33,3 +33,4 @@ void	reset_termios(void)
 	old = old_termios();
 	tcsetattr(0, TCSANOW, &old);
 }
+
