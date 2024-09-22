@@ -2,6 +2,12 @@
 # define KEYS_H
 
 #include <stdio.h>
+# define UP_TERMINAL "\e[A"
+# define UP_START_TERMINAL "\e[F"
+# define DOWN_TERMINAL "\e[B"
+# define RIGHT_TERMINAL "\e[C"
+# define LEFT_TERMINAL "\e[D"
+
 
 // typedef struct s_key
 // {
@@ -17,6 +23,7 @@
 
 typedef enum e_keycodes
 {
+	PRINTABLE,
 	ESC = 27,
 	BACKSPACE = 127,
 	ENTER = 10,
@@ -26,14 +33,7 @@ typedef enum e_keycodes
 	DOWN = 66,
 	RIGHT = 67,
 	LEFT = 68,
-} t_keycodes;
-
-typedef void (*KeyAction)(char *line, size_t *len);
-
-typedef struct {
-    t_keycodes	code;
-    KeyAction	action;
-} KeyHandler;
+}	t_keycodes;
 
 
 #endif

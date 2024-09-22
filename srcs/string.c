@@ -21,6 +21,8 @@ void	remove_char(t_line *l)
 	size_t	len;
 	size_t	i;
 
+	if (l->current == l->initial)
+		return ;
 	len = str_len_rl(l->line) + l->initial;
 	i = l->current - 1;
 	while (i < len)
@@ -54,9 +56,7 @@ bool	line_handler(t_line *l, char *buffer)
 	if (!alloc_handler(l))
 		return (false);
 	if (buffer[0] >= 32 && buffer[0] <= 126)
-	{
 		insert_char(l, buffer[0]);
-	}
 	else if (buffer[0] == 127)
 		remove_char(l);
 	return (true);

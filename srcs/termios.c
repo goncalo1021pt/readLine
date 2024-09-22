@@ -23,6 +23,7 @@ void	set_termios(void)
 	new.c_cc[VMIN] = 1;
 	new.c_cc[VTIME] = 0;
 
+	write(STDOUT_FILENO, "\e[5 q", 5);
 	tcsetattr(0, TCSANOW, &new);
 }
 
@@ -31,6 +32,7 @@ void	reset_termios(void)
 	struct termios	old;
 
 	old = old_termios();
+	write(STDOUT_FILENO, "\e[0 q", 5);
 	tcsetattr(0, TCSANOW, &old);
 }
 

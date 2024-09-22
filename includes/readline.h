@@ -26,36 +26,41 @@ typedef struct s_line
 	size_t	initial;
 	size_t	current;
 	size_t	buffer_size;
+	char	*prompt;
 	char	*line;
 }	t_line;
 
-typedef struct s_winsize {
-    unsigned short ws_row;    /* rows, in characters */
-    unsigned short ws_col;    /* columns, in characters */
-    unsigned short ws_xpixel; /* horizontal size, pixels */
-    unsigned short ws_ypixel; /* vertical size, pixels */
-} t_winsize;
+typedef struct s_winsize
+{
+	unsigned short	ws_row;
+	unsigned short	ws_col;
+	unsigned short	ws_xpixel;
+	unsigned short	ws_ypixel;
+}	t_winsize;
 
 // utils
-size_t	str_len_rl(char *str);
-void	try_free(void *ptr);
-char	*strjoin_rl(char *str1, char *str2, t_line *p);
-char	*strdup_rl(char *str);
-void	*ft_realloc(void *ptr, size_t size);
-void	ft_memcpy(void *dst, void *src, size_t size);
-void	*ft_calloc(size_t count, size_t size);
+size_t		str_len_rl(char *str);
+void		try_free(void *ptr);
+char		*strjoin_rl(char *str1, char *str2, t_line *p);
+char		*strdup_rl(char *str);
+void		*ft_realloc(void *ptr, size_t size);
+void		ft_memcpy(void *dst, void *src, size_t size);
+void		*ft_calloc(size_t count, size_t size);
 
 // string
-bool	line_handler(t_line *l, char *buffer);
+bool		line_handler(t_line *l, char *buffer);
+void		insert_char(t_line *l, char c);
+void		remove_char(t_line *l);
+bool		alloc_handler(t_line *l);
 
 // readline
-void	set_termios(void);
-void	reset_termios(void);
-char	*ft_readline(char *promt);
+void		set_termios(void);
+void		reset_termios(void);
+char		*ft_readline(char *promt);
 t_winsize	test_stuff(t_line *l);
 
 // keys
-void 	key_handler(char *buffer, int read_bytes, char *prompt, t_line *l);
+void		key_handler(char *buffer, int read_bytes, t_line *l);
 
 // history
 
