@@ -113,6 +113,7 @@ int get_key(char *buffer, int read_bytes)
 		return (BACKSPACE);
 	else if (buffer[0] == 10)
 		return (ENTER);
+	return (-1);
 }
 
 void	key_handler(char *buffer, int read_bytes, t_line *l)
