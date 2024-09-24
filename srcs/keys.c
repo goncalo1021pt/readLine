@@ -47,8 +47,9 @@ void	handle_backspace(t_line *l)
 	write_line(l);
 }
 
-void handle_enter(void)
+void handle_enter(t_line *l)
 {
+	(void)l;
 	write(1, "\n", 1);
 }
 
@@ -81,37 +82,56 @@ void handle_right(t_line *l)
 		l->current++;
 }
 
-void handle_up()
+void handle_up(t_line *l)
 {
+	(void)l;
 	write(1,"\e[A", 4);
 }
 
-void handle_down()
+void handle_down(t_line *l)
 {
-
+	(void)l;
+	write(1,"\e[B", 4);
 }
-// void
 
-void key_handler(char *buffer, int read_bytes, t_line *l)
+int get_key(char *buffer, int read_bytes)
 {
 	if (read_bytes == 3)
 	{
 		if (buffer[0] == 27 && buffer[1] == '[' && buffer[2] == 68)
-			handle_left(l);
+			return (LEFT);
 		if (buffer[0] == 27 && buffer[1] == '[' && buffer[2] == 67)
-			handle_right(l);
+			return (RIGHT);
 		if (buffer[0] == 27 && buffer[1] == '[' && buffer[2] == 65)
-			handle_up();
+			return (UP);
 		if (buffer[0] == 27 && buffer[1] == '[' && buffer[2] == 66)
-			printf("down\n");
+			return (DOWN);
 	}
 	else if (buffer[0] >= 32 && buffer[0] <= 126)
-	{
+		return (PRINTABLE);
+	else if (buffer[0] == 127)
+		return (BACKSPACE);
+	else if (buffer[0] == 10)
+		return (ENTER);
+}
+
+void	key_handler(char *buffer, int read_bytes, t_line *l)
+{
+	int			key;
+
+	key = get_key(buffer, read_bytes);
+	if (key == PRINTABLE)
 		write_line(l);
-	}
-	else if (buffer[0] == BACKSPACE)
+	else if (key == LEFT)
+		handle_left(l);
+	else if (key == RIGHT)
+		handle_right(l);
+	else if (key == UP)
+		handle_up(l);
+	else if (key == DOWN)
+		handle_down(l);
+	else if (key == BACKSPACE)
 		handle_backspace(l);
-	else if (buffer[0] == ENTER)
-		handle_enter();
-	// test_stuff(l);
+	else if (key == ENTER)
+		handle_enter(l);
 }
