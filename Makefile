@@ -65,6 +65,6 @@ send:
 	@git add . && git commit -m "auto" && git push
 
 run: all
-	./$(NAME) 
+	./$(NAME) 2>1
 
 .PHONY: all fclean clean re v s fcount send run

@@ -13,29 +13,67 @@ void get_back_to_pos(t_line *l)
 }
 
 
-void write_line(t_line *l)
+// void write_line(t_line *l)
+// {
+// 	t_winsize	w;
+// 	int 		line_size;
+// 	int 		tmp;
+
+// 	ioctl(STDIN_FILENO, TIOCGWINSZ, &w);
+// 	write(1, "\r", 1);
+// 	if (l->current % w.ws_col - 1 == 0)
+// 		write(1, "\n", 1);
+// 	if (w.ws_col > l->current)
+// 	{
+// 		write(1, l->prompt, str_len_rl(l->prompt));
+// 		write(1, l->line, str_len_rl(l->line));
+// 		write(1, " ", 1);
+// 		get_back_to_pos(l);
+// 	}
+// 	else
+// 	{
+// 		tmp = l->current / w.ws_col;
+// 		line_size = l->current - (tmp * w.ws_col);
+// 		write(1, &l->line[tmp * w.ws_col - l->initial], line_size);
+// 	}
+// }
+
+void clear_line(void)
+{
+	write(1, START_LINE, 4);
+	write(1, CLEAR_LINE, 4);
+}
+
+void clear_term(int y_offset, int x_offset)
+{
+	int y;
+
+	y = y_offset;
+	while (y_offset > 0)
+	{
+		if (!(y_offset == y && (x_offset == 0 || x_offset == 1)))
+		{
+			clear_line();
+			write(1, UP_TERMINAL, 3);
+		}
+		y_offset--;
+	}
+	clear_line();
+}
+
+
+void write_buffer(t_line *l)
 {
 	t_winsize	w;
-	int 		line_size;
-	int 		tmp;
+	int 		y_offset;
+	int 		x_offset;
 
 	ioctl(STDIN_FILENO, TIOCGWINSZ, &w);
-	write(1, "\r", 1);
-	if (l->current % w.ws_col - 1 == 0)
-		write(1, "\n", 1);
-	if (w.ws_col > l->current)
-	{
-		write(1, l->prompt, str_len_rl(l->prompt));
-		write(1, l->line, str_len_rl(l->line));
-		write(1, " ", 1);
-		get_back_to_pos(l);
-	}
-	else
-	{
-		tmp = l->current / w.ws_col;
-		line_size = l->current - (tmp * w.ws_col);
-		write(1, &l->line[tmp * w.ws_col - l->initial], line_size);
-	}
+	y_offset = l->current / (w.ws_col);
+	x_offset = l->current % (w.ws_col);
+	clear_term(y_offset, x_offset);
+	write(1, l->prompt, str_len_rl(l->prompt));
+	write(1, l->line, str_len_rl(l->line));
 }
 
 void	handle_backspace(t_line *l)
@@ -43,8 +81,7 @@ void	handle_backspace(t_line *l)
 	if (l->current == l->initial)
 		return ;
 	l->current--;
-	write(1, "\b \b", 3);
-	write_line(l);
+	write_buffer(l);
 }
 
 void handle_enter(t_line *l)
@@ -56,20 +93,24 @@ void handle_enter(t_line *l)
 void handle_left(t_line *l)
 {
 	t_winsize	w;
+	int 		y_offset;
+	int 		x_offset;
 
-	if (l->current == l->initial)
-		return ;
+	// if (l->current == l->initial)
+	// 	return ;
 	ioctl(STDIN_FILENO, TIOCGWINSZ, &w);
 	l->current--;
-	if (l->current % w.ws_col == 0)
+	y_offset = l->current / (w.ws_col);
+	x_offset = l->current % (w.ws_col);
+	fprintf(stderr, "y_offset: %d\n", y_offset);
+	if (x_offset == 0 && w.ws_col > 0)
 	{
 		write(1, UP_TERMINAL, 3);
-		if (l->current - w.ws_col < l->initial)
+		while (w.ws_col >= 0)
 		{
-			write(1, l->prompt, str_len_rl(l->prompt));
-			write(1, l->line, str_len_rl(l->line));
+			write(1, RIGHT_TERMINAL, 3);
+			w.ws_col--;
 		}
-		write(1, &l->line[l->current - l->initial], w.ws_col - 1);
 	}
 	else
 		write(1, LEFT_TERMINAL, 3);
@@ -77,9 +118,13 @@ void handle_left(t_line *l)
 
 void handle_right(t_line *l)
 {
-	write(1, &l->line[l->current - l->initial], 1);
-	if (str_len_rl(l->line) + l->initial > l->current)
-		l->current++;
+	t_winsize	w;
+
+	if (l->current == str_len_rl(l->line) + l->initial)
+		return ;
+	ioctl(STDIN_FILENO, TIOCGWINSZ, &w);
+	l->current++;
+	write(1, RIGHT_TERMINAL, 3);
 }
 
 void handle_up(t_line *l)
@@ -122,7 +167,7 @@ void	key_handler(char *buffer, int read_bytes, t_line *l)
 
 	key = get_key(buffer, read_bytes);
 	if (key == PRINTABLE)
-		write_line(l);
+		write_buffer(l);
 	else if (key == LEFT)
 		handle_left(l);
 	else if (key == RIGHT)
