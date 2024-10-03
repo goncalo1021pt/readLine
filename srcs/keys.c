@@ -38,6 +38,57 @@ void get_back_to_pos(t_line *l)
 // 	}
 // }
 
+void save_pos(char *buffer)
+{
+	int i;
+	int ret;
+
+	i = 0;
+	write(1, "\e[6n", 4);
+	while (1)
+	{
+		ret = read(0, &buffer[i], 1);
+		if (ret == 0 || buffer[i] == 'R')
+			break ;
+		i++;
+	}
+	buffer[i] = 0;
+}
+
+void get_cursor_position(int *rows, int *cols)
+{
+	char	buffer[255];
+	int		i;
+
+	i = 0;
+	save_pos(buffer);
+	if (buffer[0] == '\033' && buffer[1] == '[')
+	{
+		*rows = 0;
+		*cols = 0;
+		i = 2;
+		while (buffer[i] != ';' && buffer[i] != '\0')
+		{
+			*rows = *rows * 10 + (buffer[i] - '0');
+			i++;
+		}
+		i++;
+		while (buffer[i] != 'R' && buffer[i] != '\0')
+		{
+			*cols = *cols * 10 + (buffer[i] - '0');
+			i++;
+		}
+	}
+	else
+		*rows = *cols = -1;
+}
+
+void move_cursor_to_position(int row, int col) {
+    char buffer[32];
+    int len = snprintf(buffer, sizeof(buffer), "\033[%d;%dH", row, col);
+    write(STDOUT_FILENO, buffer, len);
+}
+
 void clear_line(void)
 {
 	write(1, START_LINE, 4);
@@ -67,13 +118,16 @@ void write_buffer(t_line *l)
 	t_winsize	w;
 	int 		y_offset;
 	int 		x_offset;
+	t_pos		pos;
 
 	ioctl(STDIN_FILENO, TIOCGWINSZ, &w);
 	y_offset = l->current / (w.ws_col);
 	x_offset = l->current % (w.ws_col);
+	get_cursor_position(&pos.y, &pos.x);
 	clear_term(y_offset, x_offset);
 	write(1, l->prompt, str_len_rl(l->prompt));
 	write(1, l->line, str_len_rl(l->line));
+	printf("\033[%d;%dH", pos.y, pos.x);
 }
 
 void	handle_backspace(t_line *l)
@@ -96,13 +150,13 @@ void handle_left(t_line *l)
 	int 		y_offset;
 	int 		x_offset;
 
-	// if (l->current == l->initial)
-	// 	return ;
+	if (l->current == l->initial)
+		return ;
 	ioctl(STDIN_FILENO, TIOCGWINSZ, &w);
 	l->current--;
 	y_offset = l->current / (w.ws_col);
 	x_offset = l->current % (w.ws_col);
-	fprintf(stderr, "y_offset: %d\n", y_offset);
+	// fprintf(stderr, "y_offset: %d\n", y_offset);
 	if (x_offset == 0 && w.ws_col > 0)
 	{
 		write(1, UP_TERMINAL, 3);
@@ -130,13 +184,13 @@ void handle_right(t_line *l)
 void handle_up(t_line *l)
 {
 	(void)l;
-	write(1,"\e[A", 4);
+	// write(1,"\e[A", 4);
 }
 
 void handle_down(t_line *l)
 {
 	(void)l;
-	write(1,"\e[B", 4);
+	// write(1,"\e[B", 4);
 }
 
 int get_key(char *buffer, int read_bytes)
