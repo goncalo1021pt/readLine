@@ -68,6 +68,23 @@ t_winsize	test_stuff(t_line *l);
 // keys
 void		key_handler(char *buffer, int read_bytes, t_line *l);
 
+// control_keys
+void		handle_backspace(t_line *l);
+void		handle_enter(t_line *l);
+
+// arrow_keys
+void		handle_left(t_line *l);
+void		handle_right(t_line *l);
+void		handle_up(t_line *l);
+void		handle_down(t_line *l);
+
+// display_edit
+void		clear_line(void);
+void		clear_term(t_pos offset);
+
+// write_to_screen
+void		write_buffer(t_line *l);
+
 // history
 
 /**
