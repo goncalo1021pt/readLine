@@ -38,6 +38,12 @@ typedef struct s_winsize
 	unsigned short	ws_ypixel;
 }	t_winsize;
 
+typedef struct s_pos
+{
+	int	x;
+	int	y;
+}	t_pos;
+
 // utils
 size_t		str_len_rl(char *str);
 void		try_free(void *ptr);
