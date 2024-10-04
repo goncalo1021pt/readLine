@@ -74,7 +74,7 @@ void		key_handler(char *buffer, int read_bytes, t_line *l);
  *             - 2: Print the history.
  * @return true if the operation was successful, false otherwise.
  */
-bool	history_rl(char *line, int func);
+bool		history_rl(char *line, int func);
 // bool	add_history(char *line, t_readline **history);
 // void	free_history(t_readline **history);
 // void	print_history(t_readline *history);
